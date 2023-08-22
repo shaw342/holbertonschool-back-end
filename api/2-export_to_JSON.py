@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """ api """
+import json
 import requests
 import sys
-import json
 
 
 def filter(data, key, val):
@@ -25,6 +25,11 @@ def must(value, error):
 
 def write(path, data):
     with open(path, 'w') as file:
+        file.write(data)
+
+
+def write_json(path, data):
+    with open(path, 'w') as file:
         json.dump(data, file)
 
 
@@ -38,16 +43,17 @@ def main():
                      ValueError("user not found"))
     user_todos = filter(todos, 'userId', user_data['id'])
     final = {}
-    for todo_data in user_todos:
-        if todo_data["userId"] not in final:
-            final[todo_data["userId"]] = []
-            
-        final[todo_data["userId"]].append({
-                "task": todo_data["title"],
-                "completed": todo_data["completed"],
-                "username": user_data["username"]
-            })
-    write('%s.csv' % index, final)
+    for v in user_todos:
+        if v['userId'] not in final:
+            final[v['userId']] = []
+
+        final[v['userId']].append({
+            'task': v['title'],
+            'completed': v['completed'],
+            'username': user_data['username'],
+        })
+
+    write_json('%s.json' % index, final)
 
 
 if __name__ == '__main__':
