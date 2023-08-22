@@ -37,12 +37,12 @@ def main():
     user_data = must(first(filter(users, 'id', index)),
                      ValueError("user not found"))
     user_todos = filter(todos, 'userId', user_data['id'])
-
     final = {}
     for todo_data in user_todos:
         if todo_data["userId"] not in final:
             final[todo_data["userId"]] = []
-            final.append({
+            
+        final[todo_data["userId"]].append({
                 "task": todo_data["title"],
                 "completed": todo_data["completed"],
                 "username": user_data["username"]
